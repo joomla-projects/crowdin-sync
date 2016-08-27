@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Joomla! Crowdin Synchronization Script
+ *
+ * @copyright  Copyright (C) 2016 Open Source Matters, Inc. All rights reserved.
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
+ */
+
+// Include the Composer autoloader
+foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $autoloadPath)
+{
+	if (file_exists($autoloadPath))
+	{
+		include $autoloadPath;
+
+		break;
+	}
+}
+
+// If the autoloader isn't loaded, we can't go further
+if (!class_exists('Composer\Autoload\ClassLoader'))
+{
+	fwrite(
+		STDERR,
+		'The project dependencies are not installed.  Please run "composer install".' . PHP_EOL
+	);
+
+	exit(1);
+}
+
+try
+{
+	(new \Joomla\Crowdin\Application)->execute();
+}
+catch (Exception $e)
+{
+	fwrite(
+		STDERR,
+		sprintf(
+			'Uncaught Exception of type %1$s thrown with message: %2$s' . PHP_EOL . PHP_EOL . 'Stack Trace:' . PHP_EOL . '%3$s',
+			get_class($e),
+			$e->getMessage(),
+			$e->getTraceAsString()
+		)
+	);
+
+	exit(1);
+}
