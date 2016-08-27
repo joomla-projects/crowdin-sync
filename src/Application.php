@@ -169,7 +169,7 @@ final class Application extends AbstractCliApplication
 			foreach ($this->yamlConfig->get('files') as $file)
 			{
 				// Finish the file name and replace the placeholders
-				$filePath = $basePath . strtr($file->translation, ['%locale%' => $this->languageMap[(string) $language->code]]);
+				$filePath = $basePath . strtr(ltrim($file->translation, './'), ['%locale%' => $this->languageMap[(string) $language->code]]);
 
 				// Make sure the directory exists
 				if (!is_dir(dirname($filePath)))
@@ -213,7 +213,7 @@ final class Application extends AbstractCliApplication
 		foreach ($this->yamlConfig->get('files') as $file)
 		{
 			// Finish the file name and replace the placeholders
-			$filePath = $basePath . $file->source;
+			$filePath = $basePath . ltrim($file->source, './');
 
 			// Now upload the file
 			$this->crowdin->file->update(new Languagefile($filePath, $file->dest));
