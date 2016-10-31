@@ -34,6 +34,7 @@ final class Application extends AbstractCliApplication
 		'ar'    => 'ar-AA',
 		'bg'    => 'bg-BG',
 		'bn'    => 'bn-BD',
+		'br-FR' => 'br-FR',
 		'ca'    => 'ca-ES',
 		'da'    => 'da-DK',
 		'de'    => 'de-DE',
