@@ -178,8 +178,18 @@ final class Application extends AbstractCliApplication
 		{
 			foreach ($this->yamlConfig->get('files') as $file)
 			{
+				$langCode = (string) $language->code;
+
+				// Make sure the language exists in the mapping array
+				if (!isset($this->languageMap[$langCode]))
+				{
+					$this->out(sprintf('<warning>Missing language code `%s` in mapping array</warning>', $langCode));
+
+					continue;
+				}
+
 				// Finish the file name and replace the placeholders
-				$filePath = $basePath . strtr($this->trimPath($file->translation), ['%locale%' => $this->languageMap[(string) $language->code]]);
+				$filePath = $basePath . strtr($this->trimPath($file->translation), ['%locale%' => $this->languageMap[$langCode]]);
 
 				// Make sure the directory exists
 				if (!is_dir(dirname($filePath)))
