@@ -58,6 +58,7 @@ final class Application extends AbstractCliApplication
 		'lv'    => 'lv-LV',
 		'mk'    => 'mk-MK',
 		'ml-IN' => 'ml-IN',
+		'ms'    => 'ms-MY',
 		'nb'    => 'nb-NO',
 		'nl'    => 'nl-NL',
 		'nl-BE' => 'nl-BE',
@@ -69,9 +70,11 @@ final class Application extends AbstractCliApplication
 		'si-LK' => 'si-LK',
 		'sk'    => 'sk-SK',
 		'sl'    => 'sl-SI',
+		'sr'    => 'sr-RS',
 		'sr-CS' => 'sr-CS',
 		'sv-SE' => 'sv-SE',
 		'th'    => 'th-TH',
+		'tr'    => 'tr-TR',
 		'zh-CN' => 'zh-CN',
 		'zh-TW' => 'zh-TW',
 	];
@@ -183,7 +186,7 @@ final class Application extends AbstractCliApplication
 				// Make sure the language exists in the mapping array
 				if (!isset($this->languageMap[$langCode]))
 				{
-					$this->out(sprintf('<warning>Missing language code `%s` in mapping array</warning>', $langCode));
+					$this->out(sprintf('<comment>Missing language code `%s` in mapping array</comment>', $langCode));
 
 					continue;
 				}
