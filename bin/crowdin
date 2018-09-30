@@ -29,21 +29,4 @@ if (!class_exists('Composer\Autoload\ClassLoader'))
 	exit(1);
 }
 
-try
-{
-	(new \Joomla\Crowdin\CliApplication)->execute();
-}
-catch (Exception $e)
-{
-	fwrite(
-		STDERR,
-		sprintf(
-			'Uncaught Exception of type %1$s thrown with message: %2$s' . PHP_EOL . PHP_EOL . 'Stack Trace:' . PHP_EOL . '%3$s',
-			get_class($e),
-			$e->getMessage(),
-			$e->getTraceAsString()
-		)
-	);
-
-	exit(1);
-}
+(new \Joomla\Crowdin\Application)->execute();
