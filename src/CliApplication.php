@@ -16,7 +16,7 @@ use Joomla\Registry\Registry;
 /**
  * Crowdin CLI Application
  */
-final class Application extends AbstractCliApplication
+final class CliApplication extends AbstractCliApplication
 {
 	/**
 	 * Crowdin API connector

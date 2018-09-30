@@ -31,7 +31,7 @@ if (!class_exists('Composer\Autoload\ClassLoader'))
 
 try
 {
-	(new \Joomla\Crowdin\Application)->execute();
+	(new \Joomla\Crowdin\CliApplication)->execute();
 }
 catch (Exception $e)
 {
