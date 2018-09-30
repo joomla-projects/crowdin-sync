@@ -7,6 +7,7 @@
     "license": "GPL-2.0+",
     "require": {
         "php": "~7.0",
+        "ext-simplexml": "*",
         "joomla/application": "~2.0",
         "joomla/console": "~2.0",
         "joomla/di": "~1.5|~2.0",
