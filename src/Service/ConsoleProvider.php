@@ -8,9 +8,13 @@
 
 namespace Joomla\Crowdin\Service;
 
+use ElKuKu\Crowdin\Crowdin;
 use Joomla\Console\Loader\ContainerLoader;
 use Joomla\Console\Loader\LoaderInterface;
+use Joomla\Crowdin\Command\UploadCommand;
+use Joomla\Crowdin\CrowdinConfiguration;
 use Joomla\DI\Container;
+use Joomla\DI\Exception\DependencyResolutionException;
 use Joomla\DI\ServiceProviderInterface;
 
 /**
@@ -29,6 +33,8 @@ final class ConsoleProvider implements ServiceProviderInterface
 	{
 		$container->alias(ContainerLoader::class, LoaderInterface::class)
 			->share(LoaderInterface::class, [$this, 'getCommandLoaderService'], true);
+
+		$container->share(UploadCommand::class, [$this, 'getUploadCommandService'], true);
 	}
 
 	/**
@@ -40,8 +46,30 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 */
 	public function getCommandLoaderService(Container $container) : LoaderInterface
 	{
-		$mapping = [];
+		$mapping = [
+			'crowdin:upload' => UploadCommand::class,
+		];
 
 		return new ContainerLoader($container, $mapping);
+	}
+
+	/**
+	 * Get the upload command service.
+	 *
+	 * @param   Container  $container  The DI container.
+	 *
+	 * @return  UploadCommand
+	 */
+	public function getUploadCommandService(Container $container) : UploadCommand
+	{
+		if (!$container->has(CrowdinConfiguration::class))
+		{
+			throw new DependencyResolutionException(sprintf('The `%s` service has not been created.', CrowdinConfiguration::class));
+		}
+
+		return new UploadCommand(
+			$container->get(Crowdin::class),
+			$container->get(CrowdinConfiguration::class)
+		);
 	}
 }

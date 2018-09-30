@@ -11,6 +11,7 @@ namespace Joomla\Crowdin;
 use Joomla\Console\Application as BaseApplication;
 use Joomla\Console\Loader\LoaderInterface;
 use Joomla\Crowdin\Service\ConsoleProvider;
+use Joomla\Crowdin\Service\CrowdinProvider;
 use Joomla\DI\Container;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
@@ -68,11 +69,9 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 				$files      = $registry->get('files', []);
 
 				// Check if an API key was given through the options otherwise look for the environment variable
-				if ($this->getConsoleInput()->hasOption('api-key'))
-				{
-					$apiKey = $this->getConsoleInput()->getOption('api-key');
-				}
-				else
+				$apiKey = $this->getConsoleInput()->getOption('api-key');
+
+				if (!$apiKey)
 				{
 					$apiKey = getenv($registry->get('api_key_env'));
 
@@ -142,6 +141,7 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 
 		$this->container = new Container;
 		$this->container->registerServiceProvider(new ConsoleProvider);
+		$this->container->registerServiceProvider(new CrowdinProvider);
 
 		$this->setCommandLoader($this->container->get(LoaderInterface::class));
 
