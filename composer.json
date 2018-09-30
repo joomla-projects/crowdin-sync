@@ -1,16 +1,17 @@
 {
     "name": "joomla/crowdin-sync",
-    "type": "project",
+    "type": "library",
     "description": "CLI application to synchronize a project with Crowdin",
     "keywords": ["joomla", "crowdin"],
     "homepage": "https://github.com/joomla-projects/crowdin-sync",
     "license": "GPL-2.0+",
     "require": {
-        "php": "~5.4|~7.0",
-        "joomla/application": "~1.6",
-        "joomla/registry": "~1.5",
+        "php": "~7.0",
+        "joomla/application": "~2.0",
+        "joomla/console": "~2.0",
+        "joomla/registry": "~1.5|~2.0",
         "elkuku/crowdin-api": "~1.0",
-        "symfony/yaml": "~2.8|~3.0"
+        "symfony/yaml": "~3.4|~4.0"
     },
     "require-dev": {},
     "autoload": {
@@ -18,5 +19,7 @@
             "Joomla\\Crowdin\\": "src/"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "bin": ["bin/crowdin"]
 }
