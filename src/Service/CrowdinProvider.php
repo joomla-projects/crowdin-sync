@@ -38,7 +38,7 @@ final class CrowdinProvider implements ServiceProviderInterface
 	 *
 	 * @return  Crowdin
 	 */
-	public function getCrowdinService(Container $container) : Crowdin
+	public function getCrowdinService(Container $container): Crowdin
 	{
 		if (!$container->has(CrowdinConfiguration::class))
 		{

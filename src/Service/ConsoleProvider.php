@@ -46,7 +46,7 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 *
 	 * @return  LoaderInterface
 	 */
-	public function getCommandLoaderService(Container $container) : LoaderInterface
+	public function getCommandLoaderService(Container $container): LoaderInterface
 	{
 		$mapping = [
 			'crowdin:download' => DownloadCommand::class,
@@ -63,7 +63,7 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 *
 	 * @return  DownloadCommand
 	 */
-	public function getDownloadCommandService(Container $container) : DownloadCommand
+	public function getDownloadCommandService(Container $container): DownloadCommand
 	{
 		if (!$container->has(CrowdinConfiguration::class))
 		{
@@ -83,7 +83,7 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 *
 	 * @return  UploadCommand
 	 */
-	public function getUploadCommandService(Container $container) : UploadCommand
+	public function getUploadCommandService(Container $container): UploadCommand
 	{
 		if (!$container->has(CrowdinConfiguration::class))
 		{
