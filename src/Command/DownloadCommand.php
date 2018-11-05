@@ -9,6 +9,9 @@
 namespace Joomla\Crowdin\Command;
 
 use Joomla\Crowdin\CrowdinUtils;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command to download project files to Crowdin.
@@ -16,13 +19,20 @@ use Joomla\Crowdin\CrowdinUtils;
 final class DownloadCommand extends CrowdinCommand
 {
 	/**
-	 * Execute the command.
+	 * The default command name
 	 *
-	 * @return  integer  The exit code for the command.
+	 * @var  string
 	 */
-	public function execute(): int
+	protected static $defaultName = 'crowdin:download';
+
+	/**
+	 * Executes the current command.
+	 *
+	 * @return integer|null  null or 0 if everything went fine, or an error code
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$symfonyStyle = $this->createSymfonyStyle();
+		$symfonyStyle = new SymfonyStyle($input, $output);
 
 		// Get a list of this project's languages
 		$projectInfoResponse = $this->crowdin->project->getInfo();
@@ -83,13 +93,12 @@ final class DownloadCommand extends CrowdinCommand
 	}
 
 	/**
-	 * Initialise the command.
+	 * Configures the current command.
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function configure()
 	{
-		$this->setName('crowdin:download');
 		$this->setDescription('Download project files to Crowdin');
 	}
 }

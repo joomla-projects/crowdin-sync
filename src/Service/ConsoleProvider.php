@@ -9,14 +9,14 @@
 namespace Joomla\Crowdin\Service;
 
 use ElKuKu\Crowdin\Crowdin;
-use Joomla\Console\Loader\ContainerLoader;
-use Joomla\Console\Loader\LoaderInterface;
 use Joomla\Crowdin\Command\DownloadCommand;
 use Joomla\Crowdin\Command\UploadCommand;
 use Joomla\Crowdin\CrowdinConfiguration;
 use Joomla\DI\Container;
 use Joomla\DI\Exception\DependencyResolutionException;
 use Joomla\DI\ServiceProviderInterface;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 
 /**
  * Console Service Provider
@@ -32,8 +32,8 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
-		$container->alias(ContainerLoader::class, LoaderInterface::class)
-			->share(LoaderInterface::class, [$this, 'getCommandLoaderService'], true);
+		$container->alias(ContainerCommandLoader::class, CommandLoaderInterface::class)
+			->share(CommandLoaderInterface::class, [$this, 'getCommandLoaderService'], true);
 
 		$container->share(DownloadCommand::class, [$this, 'getDownloadCommandService'], true);
 		$container->share(UploadCommand::class, [$this, 'getUploadCommandService'], true);
@@ -44,16 +44,16 @@ final class ConsoleProvider implements ServiceProviderInterface
 	 *
 	 * @param   Container  $container  The DI container.
 	 *
-	 * @return  LoaderInterface
+	 * @return  CommandLoaderInterface
 	 */
-	public function getCommandLoaderService(Container $container): LoaderInterface
+	public function getCommandLoaderService(Container $container): CommandLoaderInterface
 	{
 		$mapping = [
 			'crowdin:download' => DownloadCommand::class,
 			'crowdin:upload'   => UploadCommand::class,
 		];
 
-		return new ContainerLoader($container, $mapping);
+		return new ContainerCommandLoader($container, $mapping);
 	}
 
 	/**

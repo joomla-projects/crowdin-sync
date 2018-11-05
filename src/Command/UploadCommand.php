@@ -10,6 +10,9 @@ namespace Joomla\Crowdin\Command;
 
 use ElKuKu\Crowdin\Languagefile;
 use Joomla\Crowdin\CrowdinUtils;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command to upload project files to Crowdin.
@@ -17,13 +20,20 @@ use Joomla\Crowdin\CrowdinUtils;
 final class UploadCommand extends CrowdinCommand
 {
 	/**
-	 * Execute the command.
+	 * The default command name
 	 *
-	 * @return  integer  The exit code for the command.
+	 * @var  string
 	 */
-	public function execute(): int
+	protected static $defaultName = 'crowdin:upload';
+
+	/**
+	 * Executes the current command.
+	 *
+	 * @return integer|null  null or 0 if everything went fine, or an error code
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$symfonyStyle = $this->createSymfonyStyle();
+		$symfonyStyle = new SymfonyStyle($input, $output);
 
 		$basePath = $this->crowdinConfiguration->getBasePath();
 
@@ -43,13 +53,12 @@ final class UploadCommand extends CrowdinCommand
 	}
 
 	/**
-	 * Initialise the command.
+	 * Configures the current command.
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function configure()
 	{
-		$this->setName('crowdin:upload');
 		$this->setDescription('Upload project files to Crowdin');
 	}
 }

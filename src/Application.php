@@ -17,8 +17,11 @@ use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 use Joomla\DI\Exception\DependencyResolutionException;
 use Joomla\Registry\Registry;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Crowdin Console Application
@@ -28,13 +31,30 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	use ContainerAwareTrait;
 
 	/**
+	 * Application constructor.
+	 */
+	public function __construct()
+	{
+		parent::__construct('Joomla! Crowdin Synchronisation Tool');
+
+		$this->container = new Container;
+		$this->container->registerServiceProvider(new ConsoleProvider);
+		$this->container->registerServiceProvider(new CrowdinProvider);
+
+		$this->setCommandLoader($this->container->get(CommandLoaderInterface::class));
+	}
+
+	/**
 	 * Configures the Crowdin configuration service within the container.
+	 *
+	 * @param   InputInterface   $input   The application's input interface.
+	 * @param   OutputInterface  $output  The application's input interface.
 	 *
 	 * @return  void
 	 */
-	private function configureCrowdinService()
+	private function configureCrowdinService(InputInterface $input, OutputInterface $output)
 	{
-		$configDir = $this->getConsoleInput()->getOption('config-dir');
+		$configDir = $input->getOption('config-dir');
 
 		$crowdinFile = false;
 
@@ -59,17 +79,17 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 
 		$this->container->share(
 			CrowdinConfiguration::class,
-			function (Container $container) use ($crowdinFile)
+			function (Container $container) use ($crowdinFile, $input)
 			{
 				$registry = new Registry;
 				$registry->loadFile($crowdinFile, 'YAML');
 
-				$identifier = (string) ($this->getConsoleInput()->getOption('project') ?: $registry->get('project_identifier'));
+				$identifier = (string) ($input->getOption('project') ?: $registry->get('project_identifier'));
 				$basePath   = CrowdinUtils::trimPath((string) $registry->get('base_path'));
 				$files      = $registry->get('files', []);
 
 				// Check if an API key was given through the options otherwise look for the environment variable
-				$apiKey = $this->getConsoleInput()->getOption('api-key');
+				$apiKey = $input->getOption('api-key');
 
 				if (!$apiKey)
 				{
@@ -90,13 +110,13 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	}
 
 	/**
-	 * Gets the base input definition.
+	 * Gets the default input definition.
 	 *
 	 * @return  InputDefinition
 	 */
-	protected function getBaseInputDefinition(): InputDefinition
+	protected function getDefaultInputDefinition()
 	{
-		$definition = parent::getBaseInputDefinition();
+		$definition = parent::getDefaultInputDefinition();
 
 		$definition->addOption(
 			new InputOption(
@@ -129,24 +149,19 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	}
 
 	/**
-	 * Custom initialisation method.
+	 * Runs the current application.
 	 *
-	 * @return  void
+	 * @param   InputInterface   $input   The application's input interface.
+	 * @param   OutputInterface  $output  The application's input interface.
+	 *
+	 * @return  integer
 	 */
-	protected function initialise()
+	public function doRun(InputInterface $input, OutputInterface $output)
 	{
-		parent::initialise();
+		$input->bind($this->getDefinition());
 
-		$this->setName('Joomla! Crowdin Synchronization Tool');
+		$this->configureCrowdinService($input, $output);
 
-		$this->container = new Container;
-		$this->container->registerServiceProvider(new ConsoleProvider);
-		$this->container->registerServiceProvider(new CrowdinProvider);
-
-		$this->setCommandLoader($this->container->get(LoaderInterface::class));
-
-		$this->getConsoleInput()->bind($this->getDefinition());
-
-		$this->configureCrowdinService();
+		return parent::doRun($input, $output);
 	}
 }
