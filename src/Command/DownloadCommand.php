@@ -26,11 +26,14 @@ final class DownloadCommand extends CrowdinCommand
 	protected static $defaultName = 'crowdin:download';
 
 	/**
-	 * Executes the current command.
+	 * Internal function to execute the command.
 	 *
-	 * @return integer|null  null or 0 if everything went fine, or an error code
+	 * @param   InputInterface   $input   The input to inject into the command.
+	 * @param   OutputInterface  $output  The output to inject into the command.
+	 *
+	 * @return  integer  The command exit code
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function doExecute(InputInterface $input, OutputInterface $output): int
 	{
 		$symfonyStyle = new SymfonyStyle($input, $output);
 

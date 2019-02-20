@@ -12,16 +12,15 @@ use Joomla\Console\Application as BaseApplication;
 use Joomla\Console\Loader\LoaderInterface;
 use Joomla\Crowdin\Service\ConsoleProvider;
 use Joomla\Crowdin\Service\CrowdinProvider;
+use Joomla\Crowdin\Service\EventProvider;
 use Joomla\DI\Container;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 use Joomla\DI\Exception\DependencyResolutionException;
+use Joomla\Event\DispatcherInterface;
 use Joomla\Registry\Registry;
-use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Crowdin Console Application
@@ -31,56 +30,40 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	use ContainerAwareTrait;
 
 	/**
-	 * Application constructor.
-	 */
-	public function __construct()
-	{
-		parent::__construct('Joomla! Crowdin Synchronisation Tool');
-
-		$this->container = new Container;
-		$this->container->registerServiceProvider(new ConsoleProvider);
-		$this->container->registerServiceProvider(new CrowdinProvider);
-
-		$this->setCommandLoader($this->container->get(CommandLoaderInterface::class));
-	}
-
-	/**
 	 * Configures the Crowdin configuration service within the container.
-	 *
-	 * @param   InputInterface   $input   The application's input interface.
-	 * @param   OutputInterface  $output  The application's input interface.
 	 *
 	 * @return  void
 	 */
-	private function configureCrowdinService(InputInterface $input, OutputInterface $output)
+	private function configureCrowdinService()
 	{
-		$configDir = $input->getOption('config-dir');
-
-		$crowdinFile = false;
-
-		if (is_dir($configDir))
-		{
-			$file = $configDir . '/crowdin.yaml';
-
-			if (is_file($file))
-			{
-				$crowdinFile = $file;
-			}
-		}
-		elseif (file_exists('crowdin.yaml'))
-		{
-			$crowdinFile = realpath('crowdin.yaml');
-		}
-
-		if ($crowdinFile === false)
-		{
-			throw new \InvalidArgumentException('The Crowdin configuration file could not be found.');
-		}
-
 		$this->container->share(
 			CrowdinConfiguration::class,
-			function (Container $container) use ($crowdinFile, $input)
+			function (Container $container)
 			{
+				$input     = $this->getConsoleInput();
+				$configDir = $input->getOption('config-dir');
+
+				$crowdinFile = false;
+
+				if (is_dir($configDir))
+				{
+					$file = $configDir . '/crowdin.yaml';
+
+					if (is_file($file))
+					{
+						$crowdinFile = $file;
+					}
+				}
+				elseif (file_exists('crowdin.yaml'))
+				{
+					$crowdinFile = realpath('crowdin.yaml');
+				}
+
+				if ($crowdinFile === false)
+				{
+					throw new DependencyResolutionException('The Crowdin configuration file could not be found.');
+				}
+
 				$registry = new Registry;
 				$registry->loadFile($crowdinFile, 'YAML');
 
@@ -110,11 +93,11 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	}
 
 	/**
-	 * Gets the default input definition.
+	 * Builds the defauilt input definition.
 	 *
 	 * @return  InputDefinition
 	 */
-	protected function getDefaultInputDefinition()
+	protected function getDefaultInputDefinition(): InputDefinition
 	{
 		$definition = parent::getDefaultInputDefinition();
 
@@ -149,19 +132,21 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	}
 
 	/**
-	 * Runs the current application.
+	 * Custom initialisation method.
 	 *
-	 * @param   InputInterface   $input   The application's input interface.
-	 * @param   OutputInterface  $output  The application's input interface.
-	 *
-	 * @return  integer
+	 * @return  void
 	 */
-	public function doRun(InputInterface $input, OutputInterface $output)
+	protected function initialise()
 	{
-		$input->bind($this->getDefinition());
+		$this->container = new Container;
+		$this->container->registerServiceProvider(new ConsoleProvider);
+		$this->container->registerServiceProvider(new CrowdinProvider);
+		$this->container->registerServiceProvider(new EventProvider);
 
-		$this->configureCrowdinService($input, $output);
+		$this->configureCrowdinService();
 
-		return parent::doRun($input, $output);
+		$this->setCommandLoader($this->container->get(LoaderInterface::class));
+		$this->setDispatcher($this->container->get(DispatcherInterface::class));
+		$this->setName('Joomla! Crowdin Synchronisation Tool');
 	}
 }

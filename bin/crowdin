@@ -7,7 +7,14 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
-// Include the Composer autoloader
+use Composer\Autoload\ClassLoader;
+
+/*
+ * Try locating Composer's autoloader
+ *
+ * This lookup supports running this script directly from the project repository or installed within a Composer project
+ * from the `vendor/joomla/crowdin-sync/bin` directory
+ */
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $autoloadPath)
 {
 	if (file_exists($autoloadPath))
@@ -19,7 +26,7 @@ foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php
 }
 
 // If the autoloader isn't loaded, we can't go further
-if (!class_exists('Composer\Autoload\ClassLoader'))
+if (!class_exists(ClassLoader::class))
 {
 	fwrite(
 		STDERR,

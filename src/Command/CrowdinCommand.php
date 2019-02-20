@@ -9,13 +9,13 @@
 namespace Joomla\Crowdin\Command;
 
 use ElKuKu\Crowdin\Crowdin;
+use Joomla\Console\Command\AbstractCommand;
 use Joomla\Crowdin\CrowdinConfiguration;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Base class for a Crowdin API command
  */
-abstract class CrowdinCommand extends Command
+abstract class CrowdinCommand extends AbstractCommand
 {
 	/**
 	 * The Crowdin API connector.
