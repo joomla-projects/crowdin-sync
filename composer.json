@@ -6,15 +6,15 @@
     "homepage": "https://github.com/joomla-projects/crowdin-sync",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "~7.0",
+        "php": "^7.2",
         "ext-simplexml": "*",
-        "joomla/application": "~2.0",
-        "joomla/console": "~2.0",
-        "joomla/di": "~1.5|~2.0",
-        "joomla/event": "~2.0",
-        "joomla/registry": "~1.5|~2.0",
-        "elkuku/crowdin-api": "~1.0",
-        "symfony/yaml": "~3.4|~4.0"
+        "joomla/application": "^2.0",
+        "joomla/console": "^2.0",
+        "joomla/di": "^1.5|^2.0",
+        "joomla/event": "^2.0",
+        "joomla/registry": "^1.5|^2.0",
+        "elkuku/crowdin-api": "^1.0",
+        "symfony/yaml": "^3.4|^4.0"
     },
     "require-dev": {},
     "autoload": {
