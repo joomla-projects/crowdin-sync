@@ -2,7 +2,7 @@
 /**
  * Joomla! Crowdin Synchronization Script
  *
- * @copyright  Copyright (C) 2016 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 - 2019 Open Source Matters, Inc. All rights reserved.
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
