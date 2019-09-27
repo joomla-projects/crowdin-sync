@@ -100,7 +100,7 @@ final class DownloadCommand extends CrowdinCommand
 	 *
 	 * @return  void
 	 */
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setDescription('Download project files to Crowdin');
 	}

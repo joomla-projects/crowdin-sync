@@ -60,7 +60,7 @@ final class UploadCommand extends CrowdinCommand
 	 *
 	 * @return  void
 	 */
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setDescription('Upload project files to Crowdin');
 	}

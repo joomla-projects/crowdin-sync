@@ -40,18 +40,22 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 			CrowdinConfiguration::class,
 			function (Container $container)
 			{
-				$input     = $this->getConsoleInput();
-				$configDir = $input->getOption('config-dir');
+				$input = $this->getConsoleInput();
 
 				$crowdinFile = false;
 
-				if (is_dir($configDir))
+				if ($input->hasOption('config-dir'))
 				{
-					$file = $configDir . '/crowdin.yaml';
+					$configDir = $input->getOption('config-dir');
 
-					if (is_file($file))
+					if (is_dir($configDir))
 					{
-						$crowdinFile = $file;
+						$file = $configDir . '/crowdin.yaml';
+
+						if (is_file($file))
+						{
+							$crowdinFile = $file;
+						}
 					}
 				}
 				elseif (file_exists('crowdin.yaml'))
@@ -67,14 +71,14 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 				$registry = new Registry;
 				$registry->loadFile($crowdinFile, 'YAML');
 
-				$identifier = (string) ($input->getOption('project') ?: $registry->get('project_identifier'));
+				$identifier = (string) ($input->hasOption('project') ? $input->getOption('project') : $registry->get('project_identifier'));
 				$basePath   = CrowdinUtils::trimPath((string) $registry->get('base_path'));
 				$files      = $registry->get('files', []);
 
 				// Check if an API key was given through the options otherwise look for the environment variable
-				$apiKey = $input->getOption('api-key');
+				$apiKey = $input->hasOption('api-key') ? $input->getOption('api-key') : false;
 
-				if (!$apiKey)
+				if ($apiKey === false)
 				{
 					$apiKey = getenv($registry->get('api_key_env'));
 
@@ -136,7 +140,7 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 	 *
 	 * @return  void
 	 */
-	protected function initialise()
+	protected function initialise(): void
 	{
 		$this->container = new Container;
 		$this->container->registerServiceProvider(new ConsoleProvider);
