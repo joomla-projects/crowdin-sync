@@ -24,7 +24,7 @@ final class UploadCommand extends CrowdinCommand
 	 *
 	 * @var  string
 	 */
-	protected static $defaultName = 'crowdin:upload';
+	protected static $defaultName = 'upload';
 
 	/**
 	 * Internal function to execute the command.

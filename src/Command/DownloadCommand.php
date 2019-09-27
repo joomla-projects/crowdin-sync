@@ -23,7 +23,7 @@ final class DownloadCommand extends CrowdinCommand
 	 *
 	 * @var  string
 	 */
-	protected static $defaultName = 'crowdin:download';
+	protected static $defaultName = 'download';
 
 	/**
 	 * Internal function to execute the command.

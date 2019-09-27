@@ -49,8 +49,8 @@ final class ConsoleProvider implements ServiceProviderInterface
 	public function getCommandLoaderService(Container $container): LoaderInterface
 	{
 		$mapping = [
-			'crowdin:download' => DownloadCommand::class,
-			'crowdin:upload'   => UploadCommand::class,
+			DownloadCommand::getDefaultName() => DownloadCommand::class,
+			UploadCommand::getDefaultName()   => UploadCommand::class,
 		];
 
 		return new ContainerLoader($container, $mapping);
