@@ -18,7 +18,7 @@ abstract class CrowdinUtils
 	 *
 	 * @var  array
 	 */
-	private static $languageMap = [
+	private const LANGUAGE_MAP = [
 		'ar'    => 'ar-AA',
 		'bg'    => 'bg-BG',
 		'bn'    => 'bn-BD',
@@ -90,7 +90,7 @@ abstract class CrowdinUtils
 	 */
 	public static function getLanguageMap(): array
 	{
-		return self::$languageMap;
+		return self::LANGUAGE_MAP;
 	}
 
 	/**
