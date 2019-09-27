@@ -18,7 +18,7 @@ abstract class CrowdinUtils
 	 *
 	 * @var  array
 	 */
-	private const LANGUAGE_MAP = [
+	public const LANGUAGE_MAP = [
 		'ar'    => 'ar-AA',
 		'bg'    => 'bg-BG',
 		'bn'    => 'bn-BD',
@@ -81,16 +81,6 @@ abstract class CrowdinUtils
 	 */
 	private function __construct()
 	{
-	}
-
-	/**
-	 * Get the Crowdin to Joomla language code map.
-	 *
-	 * @return  array
-	 */
-	public static function getLanguageMap(): array
-	{
-		return self::LANGUAGE_MAP;
 	}
 
 	/**

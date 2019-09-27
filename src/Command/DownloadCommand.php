@@ -56,7 +56,7 @@ final class DownloadCommand extends CrowdinCommand
 		$projectInfo = simplexml_load_string((string) $projectInfoResponse->getBody());
 
 		$basePath    = $this->crowdinConfiguration->getBasePath();
-		$languageMap = CrowdinUtils::getLanguageMap();
+		$languageMap = CrowdinUtils::LANGUAGE_MAP;
 
 		foreach ($projectInfo->languages->item as $language)
 		{
