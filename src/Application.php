@@ -28,7 +28,7 @@ final class Application extends BaseApplication
 
 		$definition->addOption(
 			new InputOption(
-				'--config-dir',
+				'config-dir',
 				'',
 				InputOption::VALUE_OPTIONAL,
 				'Specify the directory to the Crowdin configuration file'
@@ -37,7 +37,7 @@ final class Application extends BaseApplication
 
 		$definition->addOption(
 			new InputOption(
-				'--project',
+				'project',
 				'',
 				InputOption::VALUE_OPTIONAL,
 				'Specify the Crowdin project to process'
@@ -46,7 +46,7 @@ final class Application extends BaseApplication
 
 		$definition->addOption(
 			new InputOption(
-				'--api-key',
+				'api-key',
 				'',
 				InputOption::VALUE_OPTIONAL,
 				'Specify the Crowdin API key to use'
