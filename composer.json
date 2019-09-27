@@ -16,7 +16,11 @@
         "elkuku/crowdin-api": "^1.0",
         "symfony/yaml": "^3.4|^4.0"
     },
-    "require-dev": {},
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
+        "joomla/coding-standards": "^3.0",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
     "autoload": {
         "psr-4": {
             "Joomla\\Crowdin\\": "src/"

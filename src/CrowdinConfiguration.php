@@ -60,7 +60,12 @@ final class CrowdinConfiguration
 	 *
 	 * @return  CrowdinConfiguration
 	 */
-	public static function createConfiguration(string $identifier = '', string $apiKey = '', string $basePath = '', array $files = []): CrowdinConfiguration
+	public static function createConfiguration(
+		string $identifier = '',
+		string $apiKey = '',
+		string $basePath = '',
+		array $files = []
+	): CrowdinConfiguration
 	{
 		$config = new self;
 
