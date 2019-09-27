@@ -125,7 +125,7 @@ final class ConsoleEventSubscriber implements SubscriberInterface, ContainerAwar
 
 				if ($input->hasOption('api-key') && $input->getOption('api-key') !== null)
 				{
-
+					$apiKey = $input->getOption('api-key');
 				}
 				elseif ($registry->exists('api_key_env'))
 				{
