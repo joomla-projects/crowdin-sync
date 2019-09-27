@@ -8,6 +8,7 @@
  */
 
 use Composer\Autoload\ClassLoader;
+use Joomla\Crowdin\ApplicationFactory;
 
 /*
  * Try locating Composer's autoloader
@@ -36,4 +37,4 @@ if (!class_exists(ClassLoader::class))
 	exit(1);
 }
 
-(new \Joomla\Crowdin\Application)->execute();
+ApplicationFactory::createApplication()->execute();

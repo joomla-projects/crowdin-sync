@@ -65,6 +65,9 @@ final class EventProvider implements ServiceProviderInterface
 	 */
 	public function getConsoleEventSubscriberService(Container $container): ConsoleEventSubscriber
 	{
-		return new ConsoleEventSubscriber;
+		$subscriber = new ConsoleEventSubscriber;
+		$subscriber->setContainer($container);
+
+		return $subscriber;
 	}
 }

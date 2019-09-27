@@ -9,93 +9,14 @@
 namespace Joomla\Crowdin;
 
 use Joomla\Console\Application as BaseApplication;
-use Joomla\Console\Loader\LoaderInterface;
-use Joomla\Crowdin\Service\ConsoleProvider;
-use Joomla\Crowdin\Service\CrowdinProvider;
-use Joomla\Crowdin\Service\EventProvider;
-use Joomla\DI\Container;
-use Joomla\DI\ContainerAwareInterface;
-use Joomla\DI\ContainerAwareTrait;
-use Joomla\DI\Exception\DependencyResolutionException;
-use Joomla\Event\DispatcherInterface;
-use Joomla\Registry\Registry;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Crowdin Console Application
  */
-final class Application extends BaseApplication implements ContainerAwareInterface
+final class Application extends BaseApplication
 {
-	use ContainerAwareTrait;
-
-	/**
-	 * Configures the Crowdin configuration service within the container.
-	 *
-	 * @return  void
-	 */
-	private function configureCrowdinService()
-	{
-		$this->container->share(
-			CrowdinConfiguration::class,
-			function (Container $container)
-			{
-				$input = $this->getConsoleInput();
-
-				$crowdinFile = false;
-
-				if ($input->hasOption('config-dir'))
-				{
-					$configDir = $input->getOption('config-dir');
-
-					if (is_dir($configDir))
-					{
-						$file = $configDir . '/crowdin.yaml';
-
-						if (is_file($file))
-						{
-							$crowdinFile = $file;
-						}
-					}
-				}
-				elseif (file_exists('crowdin.yaml'))
-				{
-					$crowdinFile = realpath('crowdin.yaml');
-				}
-
-				if ($crowdinFile === false)
-				{
-					throw new DependencyResolutionException('The Crowdin configuration file could not be found.');
-				}
-
-				$registry = new Registry;
-				$registry->loadFile($crowdinFile, 'YAML');
-
-				$identifier = (string) ($input->hasOption('project') ? $input->getOption('project') : $registry->get('project_identifier'));
-				$basePath   = CrowdinUtils::trimPath((string) $registry->get('base_path'));
-				$files      = $registry->get('files', []);
-
-				// Check if an API key was given through the options otherwise look for the environment variable
-				$apiKey = $input->hasOption('api-key') ? $input->getOption('api-key') : false;
-
-				if ($apiKey === false)
-				{
-					$apiKey = getenv($registry->get('api_key_env'));
-
-					if ($apiKey === false)
-					{
-						throw new DependencyResolutionException(
-							sprintf('The environment variable `%s` is not defined.', $registry->get('api_key_env'))
-						);
-					}
-				}
-
-				return CrowdinConfiguration::createConfiguration($identifier, $apiKey, $basePath, $files);
-			},
-			true
-		);
-	}
-
 	/**
 	 * Builds the defauilt input definition.
 	 *
@@ -133,24 +54,5 @@ final class Application extends BaseApplication implements ContainerAwareInterfa
 		);
 
 		return $definition;
-	}
-
-	/**
-	 * Custom initialisation method.
-	 *
-	 * @return  void
-	 */
-	protected function initialise(): void
-	{
-		$this->container = new Container;
-		$this->container->registerServiceProvider(new ConsoleProvider);
-		$this->container->registerServiceProvider(new CrowdinProvider);
-		$this->container->registerServiceProvider(new EventProvider);
-
-		$this->configureCrowdinService();
-
-		$this->setCommandLoader($this->container->get(LoaderInterface::class));
-		$this->setDispatcher($this->container->get(DispatcherInterface::class));
-		$this->setName('Joomla! Crowdin Synchronisation Tool');
 	}
 }
