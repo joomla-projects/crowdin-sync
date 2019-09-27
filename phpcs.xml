@@ -12,8 +12,13 @@
 
     <file>./bin</file>
     <file>./src</file>
+    <file>./tests</file>
 
     <rule ref="Joomla">
         <exclude name="Joomla.Commenting.ClassComment.MissingSinceTag"/>
+    </rule>
+
+    <rule ref="Joomla.Commenting.FunctionComment.MissingReturn">
+        <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
 </ruleset>
