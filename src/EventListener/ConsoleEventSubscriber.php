@@ -81,7 +81,7 @@ final class ConsoleEventSubscriber implements SubscriberInterface, ContainerAwar
 
 				$crowdinFile = false;
 
-				if ($input->hasOption('config-dir'))
+				if ($input->hasOption('config-dir') && $input->getOption('config-dir') !== null)
 				{
 					$configDir = $input->getOption('config-dir');
 
@@ -108,14 +108,26 @@ final class ConsoleEventSubscriber implements SubscriberInterface, ContainerAwar
 				$registry = new Registry;
 				$registry->loadFile($crowdinFile, 'YAML');
 
-				$identifier = (string) ($input->hasOption('project') ? $input->getOption('project') : $registry->get('project_identifier'));
-				$basePath   = CrowdinUtils::trimPath((string) $registry->get('base_path'));
-				$files      = $registry->get('files', []);
+				if ($input->hasOption('project') && $input->getOption('project') !== null)
+				{
+					$identifier = (string) $input->getOption('project');
+				}
+				else
+				{
+					$identifier = (string) $registry->get('project_identifier');
+				}
+
+				$basePath = CrowdinUtils::trimPath((string) $registry->get('base_path'));
+				$files    = $registry->get('files', []);
 
 				// Check if an API key was given through the options otherwise look for the environment variable
 				$apiKey = $input->hasOption('api-key') ? $input->getOption('api-key') : false;
 
-				if ($apiKey === false)
+				if ($input->hasOption('api-key') && $input->getOption('api-key') !== null)
+				{
+
+				}
+				elseif ($registry->exists('api_key_env'))
 				{
 					$apiKey = getenv($registry->get('api_key_env'));
 
@@ -125,6 +137,13 @@ final class ConsoleEventSubscriber implements SubscriberInterface, ContainerAwar
 							sprintf('The environment variable `%s` is not defined.', $registry->get('api_key_env'))
 						);
 					}
+				}
+				else
+				{
+					throw new DependencyResolutionException(
+						'The API key is not set, either pass it in the `--api-key` option or set an environment variable'
+						. ' to the `api_key_env` key of your `crowdin.yaml` file.'
+					);
 				}
 
 				return CrowdinConfiguration::createConfiguration($identifier, $apiKey, $basePath, $files);
