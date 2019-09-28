@@ -13,7 +13,7 @@
         "joomla/di": "^1.5|^2.0",
         "joomla/event": "^2.0",
         "joomla/registry": "^1.5|^2.0",
-        "elkuku/crowdin-api": "^1.0",
+        "elkuku/crowdin-api": "^2.0",
         "symfony/yaml": "^3.4|^4.0"
     },
     "require-dev": {
