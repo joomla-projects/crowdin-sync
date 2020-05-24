@@ -1,3 +1,5 @@
+**NOTE** - This repository has been archived and is no longer supported, the Joomla project has changed its Crowdin integration workflow and maintenance of this tool is no longer necessary
+
 # Crowdin Synchronization Script for Joomla! CMS Repositories
 
 This is a simple command line based script allowing Joomla! CMS repositories to synchronize their translations with Crowdin.
